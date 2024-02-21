@@ -1,0 +1,30 @@
+* {
+    margin: 0;
+}
+body {
+    background: 
+        linear-gradient(15deg, rgb(235, 235, 23), rgb(15, 137, 230));
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.grid {
+    background: rgb(3, 141, 3);
+    padding: 0.5vh;
+    display: grid;
+    grid-template-columns: repeat(10, auto);
+    gap: 0.3vh;
+}
+
+.grid > div {
+    height: min(4vw, 7vh);
+    width: min(4vw, 7vh);
+    background-color: rgba(173, 222, 222, 0.21);
+    border-radius: 0.3vh;
+}
+
+.grid .O {
+    background-color: blueviolet;
+}
