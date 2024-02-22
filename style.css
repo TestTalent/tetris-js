@@ -11,7 +11,7 @@ body {
 }
 
 .grid {
-    background: rgb(3, 141, 3);
+    background: rgb(35, 95, 35);
     padding: 0.5vh;
     display: grid;
     grid-template-columns: repeat(10, auto);
@@ -26,9 +26,29 @@ body {
 }
 
 .grid .O {
-    background-color: blueviolet;
+    background-color: rgb(231, 239, 14);
 }
 
 .grid .J {
-    background-color: rgb(45, 57, 228);
+    background-color: rgb(10, 121, 241);
+}
+
+.grid .L {
+    background-color: rgb(242, 151, 15);
+}
+
+.grid .I {
+    background-color: rgb(10, 219, 231);
+}
+
+.grid .Z {
+    background-color: rgb(233, 11, 67);
+}
+
+.grid .S {
+    background-color: rgb(46, 250, 32);
+}
+
+.grid .T {
+    background-color: rgb(135, 12, 237);
 }

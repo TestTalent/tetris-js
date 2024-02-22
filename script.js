@@ -1,8 +1,13 @@
 const PLAYFIELD_COLUMNS = 10;
-const PLAYFIELD_ROWS = 20;
+const PLAYFIELD_ROWS = 10;
 const TETROMINO_NAMES = [
     'O',
     'J',
+    'L',
+    'I',
+    'S',
+    'Z',
+    'T'
 ]
 const TETROMINOES = {
     'O' : [
@@ -11,6 +16,32 @@ const TETROMINOES = {
     ],
     'J' : [
         [1,0,0],
+        [1,1,1],
+        [0,0,0]
+    ],
+    'L' : [
+        [0,0,1],
+        [1,1,1],
+        [0,0,0]
+    ],
+    'I': [
+        [0,1,0],
+        [0,1,0],
+        [0,1,0],
+        [0,1,0]
+    ],
+    'S': [
+        [0,1,1],
+        [1,1,0],
+        [0,0,0]
+    ],
+    'Z': [
+        [1,1,0],
+        [0,1,1],
+        [0,0,0]
+    ],
+    'T': [
+        [0,1,0],
         [1,1,1],
         [0,0,0]
     ]
@@ -32,30 +63,25 @@ function generatePlayField() {
 
     playField = new Array(PLAYFIELD_ROWS).fill()
         .map(() => new Array(PLAYFIELD_COLUMNS).fill(0))
-    // console.table(playField);
 }
 
-function generateTetromino() {
-
-    const name = TETROMINO_NAMES[1];
+function generateRandomTetromino() {
+    const index = Math.floor(Math.random() * TETROMINO_NAMES.length);
+    const name = TETROMINO_NAMES[index];
     const matrix = TETROMINOES[name];
-    // console.log(matrix);
     
     tetromino = {
         name, 
         matrix,
-        row: 3,
+        row: 0,
         column: 3
     }
+
 }
 
 generatePlayField();
-generateTetromino();
+generateRandomTetromino();
 const cells = document.querySelectorAll('.grid div');
-
-
-
-
 
 function drawPlayField() {
     
@@ -77,12 +103,11 @@ function drawTetromino() {
 
     for (let row = 0; row < tetrominoMatrixSize; row++) {
         for (let column = 0; column < tetrominoMatrixSize; column++) {
+            if(!tetromino.matrix[row][column]) continue;
             const cellIndex = convertPositionToIndex(tetromino.row + row, tetromino.column + column);
             console.log(cellIndex);
             cells[cellIndex].classList.add(tetromino.name);
         }
-
-
     }
 }
 
@@ -112,7 +137,6 @@ function onKeyDown(event) {
             moveTetrominoRight();
             break;
     }
-
     draw();
 }
 
