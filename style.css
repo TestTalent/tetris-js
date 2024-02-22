@@ -28,3 +28,7 @@ body {
 .grid .O {
     background-color: blueviolet;
 }
+
+.grid .J {
+    background-color: rgb(45, 57, 228);
+}
