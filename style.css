@@ -18,6 +18,17 @@ body {
     gap: 0.3vh;
 }
 
+.score {
+    
+    padding: 0.1rem;
+    display: grid;
+    gap: 0.3vh;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+    top:0;
+}
+
 .grid > div {
     height: min(4vw, 7vh);
     width: min(4vw, 7vh);

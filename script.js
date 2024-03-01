@@ -51,8 +51,27 @@ function convertPositionToIndex(row , column) {
     return row * PLAYFIELD_COLUMNS + column;
 }
 
+function getRandomElement(array) {
+    const randomIndex = Math.floor(Math.random() * TETROMINO_NAMES.length);
+    return array[randomIndex];
+}
+
 let playField;
 let tetromino;
+let score = 0;
+let speed = 1000;
+let moveDownInternalId;
+
+function startAutoMoveDown() {
+    moveDownInternalId = setInterval(() => {
+        moveTetrominoDown();
+        draw();
+    }, speed);
+}
+
+function stopAutoMoveDown() {
+    clearInterval(moveDownInternalId);
+}
 
 
 function generatePlayField() {
@@ -65,24 +84,60 @@ function generatePlayField() {
         .map(() => new Array(PLAYFIELD_COLUMNS).fill(0))
 }
 
-function generateRandomTetromino() {
-    const index = Math.floor(Math.random() * TETROMINO_NAMES.length);
-    const name = TETROMINO_NAMES[index];
+function RemoveFullRow() {
+    let rowsCleared = 0;
+
+    for (let row = 0; row < PLAYFIELD_ROWS; row++) {
+        if(playField[row].every(cell => cell !== 0)) {
+            playField.splice(row, 1);
+            playField.unshift(new Array(PLAYFIELD_COLUMNS).fill(0));
+            rowsCleared++;
+        }
+    }
+
+    switch(rowsCleared) {
+        case 1:
+            score += 10;
+            break;
+        case 2:
+            score += 30;
+            break;
+        case 3:
+            score += 60;
+            break;
+        case 4:
+            score += 100;
+            break;
+    }
+
+    document.getElementById('score').innerText = score;
+}
+
+function rotate() {
+    rotateTetromino();
+    draw();
+}
+
+
+
+function generateTetromino(index) {
+    const name = getRandomElement(TETROMINO_NAMES);
     const matrix = TETROMINOES[name];
-    const columnTetromino = Math.floor((PLAYFIELD_COLUMNS - matrix.length) / 2);
+    const columnTetromino = PLAYFIELD_COLUMNS / 2 - Math.floor(matrix.length / 2);
+    const rowTetromino = 0;
     
     tetromino = {
         name, 
         matrix,
-        row: 0,
+        row: rowTetromino,
         column: columnTetromino
     }
     
-
 }
 
 function placeTetromino() {
     const matrixSize = tetromino.matrix.length;
+
     for (let row = 0; row < matrixSize; row++) {
         for (let column = 0; column < matrixSize; column++) {
             if(tetromino.matrix[row][column]) {
@@ -91,13 +146,14 @@ function placeTetromino() {
 
         }
     }
-    generateRandomTetromino();
+    RemoveFullRow();
+    generateTetromino();
 }
 
 generatePlayField();
-generateRandomTetromino();
+generateTetromino();
+startAutoMoveDown();
 const cells = document.querySelectorAll('.grid div');
-
 
 function drawPlayField() {
     
@@ -110,29 +166,6 @@ function drawPlayField() {
             cells[cellIndex].classList.add(name);
         }
     }
-}
-
-let showRotated = [
-    [1, 2, 3],
-    [4, 5, 6],
-    [7, 8, 9]
-]
-
-function rotateTetromino() {
-    const oldMatrix = tetromino.matrix;
-    const newMatrix = rotateMatrix(tetromino.matrix);
-    // showRotated = rotateMatrix(showRotated);
-    tetromino.matrix = newMatrix;
-    if(!isValid()) {
-        tetromino.matrix = oldMatrix;
-    }
-}
-
-draw();
-
-function rotate() {
-    rotateTetromino();
-    draw();
 }
 
 function drawTetromino() {
@@ -160,6 +193,17 @@ function draw() {
     drawTetromino();
 }
 
+function rotateTetromino() {
+    const oldMatrix = tetromino.matrix;
+    const newMatrix = rotateMatrix(tetromino.matrix);
+    tetromino.matrix = newMatrix;
+    if(!isValid()) {
+        tetromino.matrix = oldMatrix;
+    }
+}
+
+draw();
+
 
 document.addEventListener('keydown', onKeyDown);
 function onKeyDown(event) {
@@ -184,8 +228,6 @@ function onKeyDown(event) {
     draw();
 }
 
-
-
 function rotateMatrix(matrixTetromino) {
     const N = matrixTetromino.length;
     const rotateMatrix = [];
@@ -198,12 +240,13 @@ function rotateMatrix(matrixTetromino) {
     return rotateMatrix;
 }
 
+
 function moveTetrominoDown() {
     tetromino.row += 1;
     if(!isValid()) {
         tetromino.row -= 1;
         placeTetromino();
-    }
+    } 
 }
 
 function moveTetrominoLeft() {
