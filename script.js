@@ -73,6 +73,18 @@ function stopAutoMoveDown() {
     clearInterval(moveDownInternalId);
 }
 
+let isPaused = false;
+
+function togglePauseGame() {
+    if(isPaused === false) {
+        stopAutoMoveDown();
+    } else {
+        startAutoMoveDown();
+    }
+    isPaused = !isPaused;
+
+}
+
 
 function generatePlayField() {
     for (let i = 0; i < PLAYFIELD_ROWS * PLAYFIELD_COLUMNS; i++) {
@@ -204,28 +216,44 @@ function rotateTetromino() {
 
 draw();
 
-
 document.addEventListener('keydown', onKeyDown);
 function onKeyDown(event) {
-    switch(event.key) {
-        case 'Control':
-            console.log('Control');
-            rotate();
-            break;
-        case 'ArrowDown':
-            console.log('ArrowDown');
-            moveTetrominoDown();
-            break;
-        case 'ArrowLeft':
-            console.log('ArrowLeft');
-            moveTetrominoLeft();
-            break;
-        case 'ArrowRight':
-            console.log('ArrowRight');
-            moveTetrominoRight();
-            break;
+    if(event.key === 'Escape') {
+        togglePauseGame();
+    }
+    if(!isPaused) {
+        switch(event.key) {
+            case ' ':
+                console.log('Space');
+                dropTetrominoDown();
+                break;
+            case 'Control':
+                console.log('Control');
+                rotate();
+                break;
+            case 'ArrowDown':
+                console.log('ArrowDown');
+                moveTetrominoDown();
+                break;
+            case 'ArrowLeft':
+                console.log('ArrowLeft');
+                moveTetrominoLeft();
+                break;
+            case 'ArrowRight':
+                console.log('ArrowRight');
+                moveTetrominoRight();
+                break;
+        }
     }
     draw();
+}
+
+function dropTetrominoDown() {
+    while(isValid()) {
+        tetromino.row++;
+    }
+    tetromino.row--;
+
 }
 
 function rotateMatrix(matrixTetromino) {
